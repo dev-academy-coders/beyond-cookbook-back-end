@@ -43,6 +43,7 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     'users',
     'recipes',
+    'ingredients',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
