@@ -266,7 +266,7 @@ fabric.properties
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 pyvenv.cfg
-.env
+beyond_cookbook/beyond_cookbook/.env
 .venv
 env/
 venv/
