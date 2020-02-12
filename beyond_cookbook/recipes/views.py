@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
-from rest_framework import viewsets
+from rest_framework import filters, viewsets
+
 
 from recipes.models import Recipe, RecipeIngredients
 from recipes.serializers import RecipeSerializer, RecipeIngredientsSerializer
@@ -13,6 +14,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
 class RecipeIngredientsViewSet(viewsets.ModelViewSet):
     """

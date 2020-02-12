@@ -2,8 +2,8 @@ from django.shortcuts import render
 
 from rest_framework import viewsets
 
-from ingredients.models import Product, Unit
-from ingredients.serializers import ProductSerializer, UnitSerializer
+from ingredients.models import Product
+from ingredients.serializers import ProductSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
