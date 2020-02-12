@@ -19,10 +19,11 @@ class RecipeIngredients(models.Model):
     recipe = models.ForeignKey(Recipe, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     quantity = models.DecimalField(max_digits=32, decimal_places=16)
+    api_unit = models.IntegerField(default=1)
 
     class Meta:
         verbose_name = 'RecipeIngredients'
         verbose_name_plural = 'RecipeIngredients'
 
     def __str__(self):
-        return '%s (%s %s) in %s' % (self.product, round(self.quantity), self.product.default_unit, self.recipe)
+        return '%s in %s' % (self.product, self.recipe)

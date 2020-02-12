@@ -8,18 +8,11 @@ class RecipeIngredientsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeIngredients
-        fields = ['recipe', 'product', 'quantity']
+        fields = '__all__'
 
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = ProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Recipe
-        fields = ['name', 'description', 'ingredients', 'servings']
-
-    # POST json format:
-    #     {
-    #         "recipe": pk,
-    #         "product": pk,
-    #         "quantity": float
-    #     }
+        fields = '__all__'
