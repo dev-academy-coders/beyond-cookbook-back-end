@@ -7,7 +7,6 @@ class Product(models.Model):
     grams_per_piece = models.DecimalField(max_digits=18, decimal_places=9, default=0)
     mililiters_per_piece = models.DecimalField(max_digits=18, decimal_places=9, default=0)
     pieces = models.SmallIntegerField(default=0)
-    # default_quantity = models.DecimalField(max_digits=12, decimal_places=6, default=0)
 
     def __str__(self):
         return self.name

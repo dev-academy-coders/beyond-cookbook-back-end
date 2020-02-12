@@ -18,7 +18,7 @@ class Recipe(models.Model):
 class RecipeIngredients(models.Model):
     recipe = models.ForeignKey(Recipe, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
-    quantity = models.DecimalField(max_digits=32, decimal_places=16)        # enough?
+    quantity = models.DecimalField(max_digits=32, decimal_places=16)
 
     class Meta:
         verbose_name = 'RecipeIngredients'
