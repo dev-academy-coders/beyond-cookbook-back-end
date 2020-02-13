@@ -34,6 +34,44 @@ class RecipeManager(models.Manager):
             )
         return recipe
 
+    def change(self, instance, *args, **kwargs):
+        recipe_attributes = {'name', 'description', 'owner', 'ingredients', 'servings'}
+        ingredient_attributes = {'name', 'description', 'image', 'api_id', 'api_unit', 'quantity'}
+        instance.objects.update(
+            name=kwargs["description"],
+            description=kwargs["description"],
+            # owner=User.objects.get(id=kwargs["owner"]),
+            servings=kwargs["servings"]
+        )
+        ingredients = kwargs["ingredients"]
+        for item in ingredients:
+            try:
+                ingredient = Product.objects.get(api_id=item["product"]["api_id"])
+            except Product.DoesNotExist:
+                ingredient = None
+            if not ingredient:
+                ingredient = Product.objects.create(
+                    name=item["product"]["name"],
+                    description=item["product"]["description"],
+                    # image=item["product"]["image"],
+                    api_id=item["product"]["api_id"]
+                )
+                RecipeIngredients.objects.create(
+                    recipe=instance,
+                    product=ingredient,
+                    quantity=item["quantity"],
+                    api_unit=item["api_unit"]
+                )
+            else:
+                RecipeIngredients.objects.create_or_update(
+                recipe=instance,
+                product=ingredient,
+                quantity=item["quantity"],
+                api_unit=item["api_unit"]
+            )
+        return instance
+
+
 
 class Recipe(models.Model):
     name = models.CharField(max_length=255)

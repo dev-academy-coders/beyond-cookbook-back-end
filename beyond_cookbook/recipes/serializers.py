@@ -33,3 +33,11 @@ class RecipeSerializer(serializers.ModelSerializer):
                 ingredients=validated_data["recipeingredients_set"],
                 servings=validated_data["servings"]
         )
+
+    def update(self, instance, validated_data):
+        return instance.recipe.change(
+                name=validated_data["name"],
+                description=validated_data["description"],
+                ingredients=validated_data["recipeingredients_set"],
+                servings=validated_data["servings"]
+        )
