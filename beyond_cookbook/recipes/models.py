@@ -16,15 +16,15 @@ class RecipeManager(models.Manager):
         ingredients = kwargs["ingredients"]
         for item in ingredients:
             try:
-                ingredient = Product.objects.get(api_id=item["api_id"])
+                ingredient = Product.objects.get(api_id=item["product"]["api_id"])
             except Product.DoesNotExist:
                 ingredient = None
             if not ingredient:
                 ingredient = Product.objects.create(
-                    name=item["name"],
-                    description=item["description"],
-                    # image=item["image"],
-                    api_id=item["api_id"]
+                    name=item["product"]["name"],
+                    description=item["product"]["description"],
+                    # image=item["product"]["image"],
+                    api_id=item["product"]["api_id"]
                 )
             RecipeIngredients.objects.create(
                 recipe=recipe,
@@ -32,6 +32,7 @@ class RecipeManager(models.Manager):
                 quantity=item["quantity"],
                 api_unit=item["api_unit"]
             )
+        return recipe
 
 
 class Recipe(models.Model):
