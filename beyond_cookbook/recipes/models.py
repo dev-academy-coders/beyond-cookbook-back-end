@@ -10,7 +10,7 @@ class RecipeManager(models.Manager):
         recipe = Recipe.objects.create(
             name=kwargs["description"],
             description=kwargs["description"],
-            owner=kwargs["owner"],
+            # owner=User.objects.get(id=kwargs["owner"]),
             servings=kwargs["servings"]
         )
         ingredients = kwargs["ingredients"]
@@ -23,7 +23,7 @@ class RecipeManager(models.Manager):
                 ingredient = Product.objects.create(
                     name=item["name"],
                     description=item["description"],
-                    image=item["image"],
+                    # image=item["image"],
                     api_id=item["api_id"]
                 )
             RecipeIngredients.objects.create(
