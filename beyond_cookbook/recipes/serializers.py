@@ -25,21 +25,22 @@ class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = '__all__'
-        depth = 2
 
     def create(self, validated_data):
         return Recipe.recipe.add(
-            Recipe.recipe.add(
                 name=validated_data["name"],
                 description=validated_data["description"],
-                # owner=validated_data["owner"],
-                ingredients=validated_data["ingredients"],
-                # ingredients=[{
-                #     'name': validated_data["ingredients"]["name"],
-                #     'description': validated_data["ingredients"]["description"],
-                #     'image': validated_data["ingredients"]["image"],
-                #     'api_id': validated_data["ingredients"]["api_id"],
-                #     'api_unit': validated_data["ingredients"]["api_unit"],
-                #     'quantity': validated_data["ingredients"]["quantity"]}],
-                servings=validated_data["servings"])
+                ingredients=validated_data["recipeingredients_set"],
+                servings=validated_data["servings"],
+                owner=validated_data["owner"]
+        )
+
+    def update(self, instance, validated_data):
+        return Recipe.recipe.change(
+                instance=instance,
+                name=validated_data["name"],
+                description=validated_data["description"],
+                ingredients=validated_data["recipeingredients_set"],
+                servings=validated_data["servings"],
+                owner=validated_data["owner"]
         )

@@ -19,6 +19,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
 
+    def filter_queryset(self, queryset):
+        return queryset.filter(owner=self.request.user)
+
+
 class RecipeIngredientsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     """
