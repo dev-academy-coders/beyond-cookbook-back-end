@@ -10,7 +10,7 @@ class RecipeManager(models.Manager):
         recipe = Recipe.objects.create(
             name=kwargs["description"],
             description=kwargs["description"],
-            # owner=User.objects.get(id=kwargs["owner"]),
+            owner=kwargs["owner"],
             servings=kwargs["servings"]
         )
         ingredients = kwargs["ingredients"]
@@ -35,8 +35,6 @@ class RecipeManager(models.Manager):
         return recipe
 
     def change(self, instance, *args, **kwargs):
-        recipe_attributes = {'name', 'description', 'owner', 'ingredients', 'servings'}
-        ingredient_attributes = {'name', 'description', 'image', 'api_id', 'api_unit', 'quantity'}
         instance.objects.update(
             name=kwargs["description"],
             description=kwargs["description"],
@@ -64,13 +62,12 @@ class RecipeManager(models.Manager):
                 )
             else:
                 RecipeIngredients.objects.create_or_update(
-                recipe=instance,
-                product=ingredient,
-                quantity=item["quantity"],
-                api_unit=item["api_unit"]
-            )
+                    recipe=instance,
+                    product=ingredient,
+                    quantity=item["quantity"],
+                    api_unit=item["api_unit"]
+                    )
         return instance
-
 
 
 class Recipe(models.Model):
