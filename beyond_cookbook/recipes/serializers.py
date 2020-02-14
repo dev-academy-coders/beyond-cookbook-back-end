@@ -20,7 +20,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        print(validated_data)
         return Recipe.recipe.add(
                 name=validated_data["name"],
                 description=validated_data["description"],
@@ -31,8 +30,10 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         return Recipe.recipe.change(
+                instance=instance,
                 name=validated_data["name"],
                 description=validated_data["description"],
                 ingredients=validated_data["recipeingredients_set"],
-                servings=validated_data["servings"]
+                servings=validated_data["servings"],
+                owner=validated_data["owner"]
         )

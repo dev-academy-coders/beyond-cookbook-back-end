@@ -8,7 +8,7 @@ class RecipeManager(models.Manager):
         recipe_attributes = {'name', 'description', 'owner', 'ingredients', 'servings'}
         ingredient_attributes = {'name', 'description', 'image', 'api_id', 'api_unit', 'quantity'}
         recipe = Recipe.objects.create(
-            name=kwargs["description"],
+            name=kwargs["name"],
             description=kwargs["description"],
             owner=kwargs["owner"],
             servings=kwargs["servings"]
@@ -35,13 +35,12 @@ class RecipeManager(models.Manager):
         return recipe
 
     def change(self, instance, *args, **kwargs):
-        instance.objects.update(
-            name=kwargs["description"],
-            description=kwargs["description"],
-            # owner=User.objects.get(id=kwargs["owner"]),
-            servings=kwargs["servings"]
-        )
+        instance.name = kwargs["name"]
+        instance.description = kwargs["description"]
+        instance.servings = kwargs["servings"]
+        instance.save()
         ingredients = kwargs["ingredients"]
+        new_ingredients = []
         for item in ingredients:
             try:
                 ingredient = Product.objects.get(api_id=item["product"]["api_id"])
@@ -54,6 +53,7 @@ class RecipeManager(models.Manager):
                     # image=item["product"]["image"],
                     api_id=item["product"]["api_id"]
                 )
+                new_ingredients.append(ingredient)
                 RecipeIngredients.objects.create(
                     recipe=instance,
                     product=ingredient,
@@ -61,12 +61,29 @@ class RecipeManager(models.Manager):
                     api_unit=item["api_unit"]
                 )
             else:
-                RecipeIngredients.objects.create_or_update(
-                    recipe=instance,
-                    product=ingredient,
-                    quantity=item["quantity"],
-                    api_unit=item["api_unit"]
+                ingredient.name = item["product"]["name"]
+                ingredient.description = item["product"]["description"]
+                ingredient.save()
+                new_ingredients.append(ingredient)
+                try:
+                    ingredient_in_recipe = RecipeIngredients.objects.get(
+                        recipe=instance,
+                        product=ingredient
                     )
+                    ingredient_in_recipe.quantity = item["quantity"]
+                    ingredient_in_recipe.api_unit = item["api_unit"]
+                    ingredient_in_recipe.save()
+                except RecipeIngredients.DoesNotExist:
+                    RecipeIngredients.objects.create(
+                        recipe=instance,
+                        product=ingredient,
+                        quantity=item["quantity"],
+                        api_unit=item["api_unit"]
+                    )
+        current_ingredients = RecipeIngredients.objects.filter(recipe=instance)
+        for ingredient_in_recipe in current_ingredients.iterator():
+            if ingredient_in_recipe.product not in new_ingredients:
+                ingredient_in_recipe.delete()
         return instance
 
 
